@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>С днём рождения, Мамочка!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Comfortaa:wght@300;400;600;700&family=Marck+Script&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #ff69b4;
+      --light-pink: #ffb6c1;
+      --gold: #ffd700;
+      --purple: #da70d6;
+      --lavender: #e6e6fa;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef, #fad0c4);
+      font-family: 'Comfortaa', cursive;
+      overflow-x: hidden;
+      position: relative;
+      color: #fff;
+    }
+
+    /* Магический фон */
+    .magic-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(218, 112, 214, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 182, 193, 0.2) 0%, transparent 50%);
+      animation: bgMove 20s ease-in-out infinite;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-20px, -20px) scale(1.1); }
+      66% { transform: translate(20px, -10px) scale(0.9); }
+    }
+
+    /* Canvas для всех эффектов */
+    #magicCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Падающие лепестки */
+    .petal {
+      position: fixed;
+      top: -50px;
+      font-size: 25px;
+      animation: fall linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(calc(100vh + 50px)) rotate(720deg);
+      }
+    }
+
+    /* Плавающие сердечки */
+    .floating-heart {
+      position: fixed;
+      color: rgba(255, 105, 180, 0.7);
+      font-size: 20px;
+      animation: floatUp 4s ease-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+      }
+      15% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-150px) scale(1.5);
+      }
+    }
+
+    /* Главный контейнер */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Карточка */
+    .birthday-card {
+      width: min(900px, 100%);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border: 3px solid rgba(255, 105, 180, 0.3);
+      border-radius: 30px;
+      padding: 50px;
+      box-shadow: 
+        0 30px 60px rgba(255, 105, 180, 0.3),
+        0 0 100px rgba(255, 182, 193, 0.2),
+        inset 0 0 50px rgba(255, 255, 255, 0.5);
+      transform: scale(0.8) rotateY(180deg);
+      opacity: 0;
+      animation: appear 2s ease-out 0.5s forwards;
+    }
+
+    @keyframes appear {
+      to {
+        transform: scale(1) rotateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Заголовок */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .crown {
+      font-size: 3rem;
+      color: #ffd700;
+      animation: sparkle 2s ease-in-out infinite;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    }
+
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1) rotate(-5deg); }
+      50% { transform: scale(1.2) rotate(5deg); }
+    }
+
+    .main-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      background: linear-gradient(45deg, #ff69b4, #ffd700, #da70d6, #ff69b4);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient 3s ease-in-out infinite;
+      filter: drop-shadow(0 5px 15px rgba(255, 105, 180, 0.5));
+    }
+
+    @keyframes gradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      font-family: 'Marck Script', cursive;
+      font-size: 2rem;
+      color: #da70d6;
+      margin-top: 10px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Фото секция */
+    .photo-frame {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .photo-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      25% { transform: translateY(-10px) rotate(2deg); }
+      75% { transform: translateY(10px) rotate(-1deg); }
+    }
+
+    .photo-border {
+      position: absolute;
+      inset: -15px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff69b4, #ffd700, #da70d6, #ff69b4);
+      background-size: 300% 300%;
+      animation: gradient 4s linear infinite;
+      filter: blur(15px);
+    }
+
+    .photo {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid white;
+      box-shadow: 
+        0 0 50px rgba(255, 105, 180, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+      background: linear-gradient(135deg, #ff69b4, #da70d6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-text {
+      font-size: 4rem;
+      color: white;
+      font-family: 'Pacifico', cursive;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Магический текст */
+    .magic-text {
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 105, 180, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .magic-text::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 255, 255, 0.5) 50%, 
+        transparent 70%);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .poem {
+      position: relative;
+      z-index: 1;
+      font-family: 'Marck Script', cursive;
+      font-size: 1.6rem;
+      line-height: 2;
+      color: #8b008b;
+      text-align: center;
+      opacity: 0;
+      animation: fadeInUp 2s ease-out 2s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .poem p {
+      margin: 10px 0;
+    }
+
+    /* Пожелания */
+    .wishes {
+      background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(218, 112, 214, 0.3));
+      border-radius: 25px;
+      padding: 35px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+      transform: scale(0);
+      animation: popIn 1s ease-out 3s forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0) rotate(180deg); }
+      50% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    .wish-item {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      font-size: 1.2rem;
+      color: #4b0082;
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+
+    .wish-item:nth-child(1) { animation-delay: 3.5s; }
+    .wish-item:nth-child(2) { animation-delay: 4s; }
+    .wish-item:nth-child(3) { animation-delay: 4.5s; }
+    .wish-item:nth-child(4) { animation-delay: 5s; }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .wish-icon {
+      font-size: 2rem;
+      margin-right: 15px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .wish-item:nth-child(odd) .wish-icon {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.2); }
+    }
+
+    /* Подпись */
+    .signature {
+      text-align: center;
+      font-family: 'Marck Script', cursive;
+      font-size: 1.8rem;
+      color: #ff1493;
+      margin-top: 40px;
+      position: relative;
+      animation: heartBeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      45% { transform: scale(1); }
+      60% { transform: scale(1.1); }
+      80% { transform: scale(1); }
+    }
+
+    .signature .heart {
+      display: inline-block;
+      color: #ff1493;
+      font-size: 1.5em;
+      animation: heartPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes heartPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    /* Аудио элемент */
+    audio {
+      display: none;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .birthday-card {
+        padding: 30px 20px;
+      }
+      
+      .main-title {
+        font-size: 3rem;
+      }
+      
+      .subtitle {
+        font-size: 1.5rem;
+      }
+      
+      .poem {
+        font-size: 1.3rem;
+      }
+      
+      .wish-item {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Магический фон -->
+  <div class="magic-bg"></div>
+  
+  <!-- Canvas для салюта и эффектов -->
+  <canvas id="magicCanvas"></canvas>
+
+  <!-- Фоновая музыка -->
+  <audio id="backgroundMusic" loop autoplay>
+    <source src="./music.mp3" type="audio/mpeg">
+    <source src="./birthday.mp3" type="audio/mpeg">
+    <source src="./happy-birthday.mp3" type="audio/mpeg">
+    <source src="./celebration.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="birthday-card">
+      <div class="header">
+        <div class="crown">👑</div>
+        <h1 class="main-title">С Днём Рождения!</h1>
+        <p class="subtitle">Дорогая Мамочка</p>
+      </div>
+      
+      <div class="photo-frame">
+        <div class="photo-wrapper">
+          <div class="photo-border"></div>
+          <div class="photo" id="photo">
+            <span class="photo-text">❤️</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="magic-text">
+        <div class="poem">
+          <p>Ты — солнце, что греет нас каждый день,</p>
+          <p>Ты — звезда, что светит в ночной тени,</p>
+          <p>Ты — цветок, что дарит нам красоту,</p>
+          <p>Ты — любовь, что создаёт теплоту! ✨</p>
+        </div>
+      </div>
+      
+      <div class="wishes">
+        <div class="wish-item">
+          <span class="wish-icon">🌸</span>
+          <span>Пусть каждый день приносит радость и счастье, как первые весенние цветы!</span>
+        </div>
+        <div class="wish-item">
+          <span class="wish-icon">💖</span>
+          <span>Пусть любовь окружает тебя со всех сторон, согревая сердце!</span>
+        </div>
+        <div class="wish-item">
+          <span class="wish-icon">🌟</span>
+          <span>Пусть мечты сбываются легко, как по волшебству!</span>
+        </div>
+        <div class="wish-item">
+          <span class="wish-icon">🎁</span>
+          <span>Пусть жизнь дарит только приятные сюрпризы и яркие моменты!</span>
+        </div>
+      </div>
+      
+      <div class="signature">
+        С бесконечной любовью <span class="heart">❤️</span> <span class="heart">❤️</span> <span class="heart">❤️</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Создаем падающие лепестки
+(function() {
+  const petalEmojis = ['🌸', '🌺', '🌷', '🌹', '🏵️', '💐'];
+  
+  function createPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.animationDuration = (Math.random() * 5 + 5) + 's';
+    petal.style.fontSize = (Math.random() * 15 + 20) + 'px';
+    document.body.appendChild(petal);
+    
+    setTimeout(() => petal.remove(), 10000);
+  }
+  
+  setInterval(createPetal, 800);
+})();
+
+// Создаем плавающие сердечки
+(function() {
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.textContent = '💕';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.bottom = '0';
+    heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+    document.body.appendChild(heart);
+    
+    setTimeout(() => heart.remove(), 5000);
+  }
+  
+  setInterval(createHeart, 1500);
+})();
+
+// Загрузка фото
+(function() {
+  const photo = document.getElementById('photo');
+  const photoText = photo.querySelector('.photo-text');
+  const imageUrls = [
+    './mama.jpg', './mama.JPG', './mama.jpeg', './mama.JPEG',
+    './mama.png', './mama.PNG', './mother.jpg', './mom.jpg',
+    './photo.jpg', './avatar.jpg'
+  ];
+  
+  let currentIndex = 0;
+  function tryLoadImage() {
+    if (currentIndex >= imageUrls.length) return;
+    
+    const img = new Image();
+    img.onload = function() {
+      photoText.style.display = 'none';
+      img.style.cssText = `
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      `;
+      photo.appendChild(img);
+    };
+    img.onerror = function() {
+      currentIndex++;
+      tryLoadImage();
+    };
+    img.src = imageUrls[currentIndex];
+  }
+  
+  tryLoadImage();
+})();
+
+// МАГИЧЕСКИЙ САЛЮТ С СЕРДЕЧКАМИ И ИГРУШКАМИ
+const canvas = document.getElementById('magicCanvas');
+const ctx = canvas.getContext('2d');
+let fireworks = [];
+let particles = [];
+let toys = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Класс для игрушек
+class Toy {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 30 + 20;
+    this.velocity = {
+      x: (Math.random() - 0.5) * 4,
+      y: -(Math.random() * 3 + 2)
+    };
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+    this.opacity = 1;
+    this.gravity = 0.1;
+    this.emoji = ['🧸', '🎀', '🎁', '💝', '🌺', '🦄', '🐰', '🌈'][Math.floor(Math.random() * 8)];
+  }
+
+  update() {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.velocity.y += this.gravity;
+    this.rotation += this.rotationSpeed;
+    this.opacity -= 0.01;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.font = `${this.size}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.emoji, 0, 0);
+    ctx.restore();
+  }
+}
+
+// Класс для частиц
+class Particle {
+  constructor(x, y, color, velocity, size = 2, isHeart = false) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.velocity = velocity;
+    this.size = size;
+    this.opacity = 1;
+    this.decay = Math.random() * 0.015 + 0.005;
+    this.gravity = 0.05;
+    this.isHeart = isHeart;
+  }
+
+  update() {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.velocity.y += this.gravity;
+    this.velocity.x *= 0.99;
+    this.opacity -= this.decay;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    
+    if (this.isHeart) {
+      ctx.font = `${this.size * 8}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('❤️', this.x, this.y);
+    } else {
+      ctx.fillStyle = this.color;
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    ctx.restore();
+  }
+}
+
+// Класс для фейерверков
+class Firework {
+  constructor(sx, sy, tx, ty) {
+    this.x = sx;
+    this.y = sy;
+    this.sx = sx;
+    this.sy = sy;
+    this.tx = tx;
+    this.ty = ty;
+    this.distanceToTarget = Math.hypot(tx - sx, ty - sy);
+    this.distanceTraveled = 0;
+    this.trail = [];
+    this.trailLength = 15;
+    this.angle = Math.atan2(ty - sy, tx - sx);
+    this.speed = 3;
+    this.acceleration = 1.05;
+    this.brightness = Math.random() * 50 + 50;
+    this.targetRadius = 1;
+    const hue = Math.random() * 60 + 300; // Розово-пурпурные тона
+    this.color = `hsl(${hue}, 100%, 60%)`;
+  }
+
+  update(index) {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > this.trailLength) {
+      this.trail.shift();
+    }
+
+    this.speed *= this.acceleration;
+    const vx = Math.cos(this.angle) * this.speed;
+    const vy = Math.sin(this.angle) * this.speed;
+
+    this.distanceTraveled = Math.hypot(this.x + vx - this.sx, this.y + vy - this.sy);
+
+    if (this.distanceTraveled >= this.distanceToTarget) {
+      createMagicExplosion(this.tx, this.ty);
+      fireworks.splice(index, 1);
+    } else {
+      this.x += vx;
+      this.y += vy;
+    }
+  }
+
+  draw() {
+    // След
+    for (let i = 0; i < this.trail.length; i++) {
+      ctx.save();
+      ctx.globalAlpha = (i / this.trail.length) * 0.5;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.trail[i].x, this.trail[i].y, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Ракета
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function createMagicExplosion(x, y) {
+  const particleCount = 60 + Math.floor(Math.random() * 40);
+  const colors = ['#ff69b4', '#ffd700', '#da70d6', '#ff1493', '#ffb6c1'];
+  
+  // Обычные частицы
+  for (let i = 0; i < particleCount; i++) {
+    const angle = (Math.PI * 2 / particleCount) * i;
+    const velocity = Math.random() * 4 + 2;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    particles.push(new Particle(
+      x,
+      y,
+      color,
+      {
+        x: Math.cos(angle) * velocity * (0.5 + Math.random()),
+        y: Math.sin(angle) * velocity * (0.5 + Math.random())
+      },
+      Math.random() * 3 + 1
+    ));
+  }
+  
+  // Сердечки
+  for (let i = 0; i < 10; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 3 + 1;
+    
+    particles.push(new Particle(
+      x,
+      y,
+      '#ff1493',
+      {
+        x: Math.cos(angle) * velocity,
+        y: Math.sin(angle) * velocity
+      },
+      Math.random() * 2 + 1,
+      true // isHeart
+    ));
+  }
+  
+  // Игрушки
+  for (let i = 0; i < 3; i++) {
+    toys.push(new Toy(x, y));
+  }
+  
+  // Центральная вспышка
+  for (let i = 0; i < 30; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 2;
+    
+    particles.push(new Particle(
+      x,
+      y,
+      '#ffffff',
+      {
+        x: Math.cos(angle) * velocity,
+        y: Math.sin(angle) * velocity
+      },
+      Math.random() * 2 + 0.5
+    ));
+  }
+}
+
+// Автоматический запуск салютов
+function launchAutoFireworks() {
+  const count = 3 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const startX = Math.random() * canvas.width;
+      const startY = canvas.height;
+      const endX = Math.random() * canvas.width;
+      const endY = Math.random() * canvas.height * 0.5 + 50;
+      
+      fireworks.push(new Firework(startX, startY, endX, endY));
+    }, i * 300);
+  }
+}
+
+// Запускаем салюты регулярно
+setInterval(launchAutoFireworks, 3000);
+
+// Первый залп
+setTimeout(launchAutoFireworks, 500);
+
+// Анимация
+function animate() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Фейерверки
+  let i = fireworks.length;
+  while (i--) {
+    fireworks[i].draw();
+    fireworks[i].update(i);
+  }
+
+  // Частицы
+  let j = particles.length;
+  while (j--) {
+    particles[j].draw();
+    particles[j].update();
+
+    if (particles[j].opacity <= 0) {
+      particles.splice(j, 1);
+    }
+  }
+
+  // Игрушки
+  let k = toys.length;
+  while (k--) {
+    toys[k].draw();
+    toys[k].update();
+
+    if (toys[k].opacity <= 0 || toys[k].y > canvas.height) {
+      toys.splice(k, 1);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Автоматическое воспроизведение музыки
+window.addEventListener('load', () => {
+  const music = document.getElementById('backgroundMusic');
+  music.volume = 0.3;
+  
+  // Пробуем несколько способов воспроизведения
+  const playPromise = music.play();
+  
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Если не получилось, пробуем при первом взаимодействии
+      document.addEventListener('click', function playOnce() {
+        music.play();
+        document.removeEventListener('click', playOnce);
+      });
+    });
+  }
+});
+
+// Дополнительная попытка автовоспроизведения
+setTimeout(() => {
+  const music = document.getElementById('backgroundMusic');
+  if (music.paused) {
+    music.play().catch(() => {});
+  }
+}, 1000);
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>С днём рождения, Мамочка!</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Comfortaa:wght@300;400;600;700&family=Marck+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -14,41 +14,46 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #2a0845, #1a0633, #0f0320);
-      font-family: 'Comfortaa', cursive;
+      background: radial-gradient(ellipse at bottom, #1b1032 0%, #0a0015 100%);
+      font-family: 'Nunito', sans-serif;
       overflow-x: hidden;
       position: relative;
       color: #fff;
     }
 
-    /* Canvas для всех эффектов */
-    #magicCanvas {
+    /* Canvas для всех визуальных эффектов */
+    #effectsCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
       z-index: 1;
     }
 
-    /* Падающие лепестки */
-    .petal {
+    /* Звездное небо на фоне */
+    .stars {
       position: fixed;
-      top: -50px;
-      font-size: 20px;
-      animation: fall linear;
-      z-index: 2;
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
 
-    @keyframes fall {
-      to {
-        transform: translateY(calc(100vh + 50px)) rotate(360deg);
-      }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
     }
 
-    /* Главный контейнер */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Контейнер */
     .container {
       position: relative;
       z-index: 10;
@@ -59,412 +64,424 @@
       padding: 20px;
     }
 
-    /* Карточка - максимально прозрачная */
-    .birthday-card {
-      width: min(900px, 100%);
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 105, 180, 0.2);
-      border-radius: 30px;
+    /* Главная карточка - ультра прозрачная */
+    .card {
+      width: min(800px, 95%);
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(3px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
       padding: 40px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 2s ease-out;
+      animation: appear 2s ease-out;
     }
 
-    @keyframes fadeIn {
+    @keyframes appear {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) scale(0.9);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
     }
 
     /* Заголовок */
-    .header {
+    .title-section {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
     }
 
-    .crown {
-      font-size: 2.5rem;
-      color: #ffd700;
-      animation: pulse 2s ease-in-out infinite;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    .main-title {
-      font-family: 'Pacifico', cursive;
-      font-size: clamp(2.5rem, 7vw, 4.5rem);
-      background: linear-gradient(45deg, #ff69b4, #ffd700, #ff69b4);
-      background-size: 200% 200%;
+    .title {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff6ec7, #ffb347, #ff6ec7);
+      background-size: 200% auto;
       -webkit-background-clip: text;
-      background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradient 3s ease-in-out infinite;
-      filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.6));
+      animation: shimmer 3s linear infinite;
+      text-shadow: 0 0 40px rgba(255, 110, 199, 0.5);
+      line-height: 1.2;
     }
 
-    @keyframes gradient {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+    @keyframes shimmer {
+      to { background-position: 200% center; }
     }
 
     .subtitle {
-      font-family: 'Marck Script', cursive;
+      font-family: 'Caveat', cursive;
       font-size: 1.8rem;
-      color: #ffb6c1;
+      color: #ffc0e0;
       margin-top: 10px;
-      text-shadow: 0 0 20px rgba(255, 182, 193, 0.8);
+      animation: glow 2s ease-in-out infinite alternate;
     }
 
-    /* Фото секция */
-    .photo-frame {
+    @keyframes glow {
+      from { text-shadow: 0 0 10px rgba(255, 192, 224, 0.5); }
+      to { text-shadow: 0 0 20px rgba(255, 192, 224, 0.8), 0 0 30px rgba(255, 192, 224, 0.5); }
+    }
+
+    /* Фото-блок */
+    .photo-section {
       display: flex;
       justify-content: center;
       margin: 30px 0;
     }
 
-    .photo-wrapper {
-      position: relative;
-      width: 180px;
-      height: 180px;
-      animation: float 6s ease-in-out infinite;
+    .photo-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff6ec7, #ffb347);
+      padding: 3px;
+      animation: rotate 10s linear infinite;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
     }
 
-    .photo {
+    .photo-inner {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      overflow: hidden;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 0 40px rgba(255, 105, 180, 0.6);
-      background: linear-gradient(135deg, #ff69b4, #da70d6);
+      background: #1b1032;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 4rem;
+      overflow: hidden;
+      position: relative;
     }
 
-    .photo-text {
-      font-size: 3rem;
-      color: white;
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    /* Текст - прозрачный блок */
-    .magic-text {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 105, 180, 0.1);
-      border-radius: 20px;
+    /* Поэтическое поздравление */
+    .poem-section {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 15px;
       padding: 25px;
-      margin: 30px 0;
+      margin: 25px 0;
+      text-align: center;
     }
 
     .poem {
-      font-family: 'Marck Script', cursive;
-      font-size: 1.5rem;
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
       line-height: 1.8;
-      color: #ffb6c1;
-      text-align: center;
-      text-shadow: 0 0 20px rgba(255, 182, 193, 0.6);
+      color: #ffd4e5;
+      text-shadow: 0 0 15px rgba(255, 212, 229, 0.5);
     }
 
-    .poem p {
+    .poem-line {
       margin: 8px 0;
+      opacity: 0;
+      animation: fadeInLine 1s ease-out forwards;
     }
 
-    /* Пожелания - прозрачные */
-    .wishes {
-      background: rgba(255, 182, 193, 0.05);
-      border: 1px solid rgba(255, 182, 193, 0.1);
-      border-radius: 20px;
-      padding: 25px;
-      margin: 20px 0;
+    .poem-line:nth-child(1) { animation-delay: 1s; }
+    .poem-line:nth-child(2) { animation-delay: 1.5s; }
+    .poem-line:nth-child(3) { animation-delay: 2s; }
+    .poem-line:nth-child(4) { animation-delay: 2.5s; }
+
+    @keyframes fadeInLine {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
     }
 
-    .wish-item {
+    /* Пожелания */
+    .wishes-section {
+      margin: 30px 0;
+    }
+
+    .wish {
       display: flex;
       align-items: center;
       margin: 15px 0;
+      color: #ffb8d6;
       font-size: 1.1rem;
-      color: #ffb6c1;
-      text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+
+    .wish:nth-child(1) { animation-delay: 3s; }
+    .wish:nth-child(2) { animation-delay: 3.3s; }
+    .wish:nth-child(3) { animation-delay: 3.6s; }
+    .wish:nth-child(4) { animation-delay: 3.9s; }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .wish-icon {
       font-size: 1.5rem;
       margin-right: 12px;
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
     }
 
     /* Подпись */
     .signature {
       text-align: center;
-      font-family: 'Marck Script', cursive;
-      font-size: 1.6rem;
-      color: #ff69b4;
-      margin-top: 30px;
-      text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
-      animation: heartBeat 2s ease-in-out infinite;
+      font-family: 'Caveat', cursive;
+      font-size: 1.8rem;
+      color: #ff6ec7;
+      margin-top: 35px;
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); }
-      30% { transform: scale(1.05); }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
     }
 
-    .signature .heart {
+    .hearts {
       display: inline-block;
-      font-size: 1.3em;
+      font-size: 1.5rem;
+      animation: heartbeat 1.5s ease-in-out infinite;
     }
 
-    /* Кнопка для музыки на случай если автоплей не сработал */
-    .music-hint {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255, 105, 180, 0.2);
-      border: 1px solid rgba(255, 105, 180, 0.4);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      z-index: 100;
-      animation: fadeInOut 3s ease-in-out;
-      display: none;
-    }
-
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      45% { transform: scale(0.9); }
     }
 
     /* Адаптивность */
     @media (max-width: 768px) {
-      .birthday-card {
-        padding: 25px 15px;
+      .card {
+        padding: 25px 20px;
       }
       
-      .main-title {
+      .title {
         font-size: 2.5rem;
       }
       
       .poem {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
       
-      .wish-item {
+      .wish {
         font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Canvas для салюта и эффектов -->
-  <canvas id="magicCanvas"></canvas>
+  <!-- Звездное небо -->
+  <div class="stars" id="starsContainer"></div>
+  
+  <!-- Canvas для эффектов -->
+  <canvas id="effectsCanvas"></canvas>
 
-  <!-- Фоновая музыка -->
-  <audio id="bgMusic" loop>
+  <!-- Музыка с автовоспроизведением -->
+  <audio id="backgroundMusic" autoplay loop>
     <source src="./music.mp3" type="audio/mpeg">
+    <source src="./music.ogg" type="audio/ogg">
     <source src="./birthday.mp3" type="audio/mpeg">
+    <source src="./happy-birthday.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Подсказка для музыки -->
-  <div class="music-hint" id="musicHint" onclick="startMusic()">
-    🎵 Нажмите для музыки
-  </div>
-
   <div class="container">
-    <div class="birthday-card">
-      <div class="header">
-        <div class="crown">👑</div>
-        <h1 class="main-title">С Днём Рождения!</h1>
-        <p class="subtitle">Любимая Мамочка</p>
+    <div class="card">
+      <div class="title-section">
+        <h1 class="title">С Днём Рождения!</h1>
+        <p class="subtitle">Дорогая Мамочка</p>
       </div>
       
-      <div class="photo-frame">
-        <div class="photo-wrapper">
-          <div class="photo" id="photo">
-            <span class="photo-text">❤️</span>
+      <div class="photo-section">
+        <div class="photo-circle">
+          <div class="photo-inner" id="photoContainer">
+            💖
           </div>
         </div>
       </div>
       
-      <div class="magic-text">
+      <div class="poem-section">
         <div class="poem">
-          <p>Ты — наше солнце, наш свет и тепло,</p>
-          <p>С тобою на сердце всегда так светло!</p>
-          <p>Ты даришь нам счастье, любовь и заботу,</p>
-          <p>Спасибо за всё, за твою доброту! ✨</p>
+          <div class="poem-line">Мама — это лучик света,</div>
+          <div class="poem-line">Нежность утренней зари,</div>
+          <div class="poem-line">Ты для нас дороже всех на свете,</div>
+          <div class="poem-line">Счастья океан тебе дарим! ✨</div>
         </div>
       </div>
       
-      <div class="wishes">
-        <div class="wish-item">
-          <span class="wish-icon">🌸</span>
-          <span>Пусть каждый день дарит улыбки и радость!</span>
+      <div class="wishes-section">
+        <div class="wish">
+          <span class="wish-icon">🌺</span>
+          <span>Пусть каждый новый день встречает тебя цветами и улыбками!</span>
         </div>
-        <div class="wish-item">
-          <span class="wish-icon">💖</span>
-          <span>Пусть сердце поёт от счастья и любви!</span>
+        <div class="wish">
+          <span class="wish-icon">⭐</span>
+          <span>Пусть звезды исполняют все твои заветные желания!</span>
         </div>
-        <div class="wish-item">
-          <span class="wish-icon">🌟</span>
-          <span>Пусть мечты сбываются одна за другой!</span>
-        </div>
-        <div class="wish-item">
+        <div class="wish">
           <span class="wish-icon">🎁</span>
-          <span>Пусть жизнь будет полна чудес и сюрпризов!</span>
+          <span>Пусть жизнь преподносит только приятные сюрпризы!</span>
+        </div>
+        <div class="wish">
+          <span class="wish-icon">💕</span>
+          <span>Пусть любовь и счастье всегда живут в твоем сердце!</span>
         </div>
       </div>
       
       <div class="signature">
-        С любовью <span class="heart">❤️</span> <span class="heart">❤️</span> <span class="heart">❤️</span>
+        Твои любящие дети <span class="hearts">❤️❤️❤️</span>
       </div>
     </div>
   </div>
 
 <script>
-// Ограничения для производительности
-const MAX_PARTICLES = 150;
-const MAX_TOYS = 20;
-const MAX_FIREWORKS = 3;
-
-// Создаем падающие лепестки с ограничением
-let petalCount = 0;
-const MAX_PETALS = 15;
-
-(function() {
-  const petalEmojis = ['🌸', '🌺', '🌷', '🌹'];
+// Создаем звездное небо
+(function createStars() {
+  const container = document.getElementById('starsContainer');
+  const starCount = 150;
   
-  function createPetal() {
-    if (petalCount >= MAX_PETALS) return;
-    
-    const petal = document.createElement('div');
-    petal.className = 'petal';
-    petal.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
-    petal.style.left = Math.random() * 100 + '%';
-    petal.style.animationDuration = (Math.random() * 3 + 5) + 's';
-    document.body.appendChild(petal);
-    petalCount++;
-    
-    setTimeout(() => {
-      petal.remove();
-      petalCount--;
-    }, 8000);
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.width = star.style.height = Math.random() * 3 + 'px';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    container.appendChild(star);
   }
-  
-  setInterval(createPetal, 2000);
 })();
 
-// Музыка
-let musicStarted = false;
-
-function startMusic() {
-  const music = document.getElementById('bgMusic');
-  const hint = document.getElementById('musicHint');
-  
-  if (!musicStarted) {
-    music.volume = 0.3;
-    music.play().then(() => {
-      musicStarted = true;
-      hint.style.display = 'none';
-    }).catch(console.error);
-  }
-}
-
-// Попытка автовоспроизведения
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const music = document.getElementById('bgMusic');
-    music.volume = 0.3;
-    
-    music.play().then(() => {
-      musicStarted = true;
-    }).catch(() => {
-      // Показываем подсказку если автоплей не сработал
-      document.getElementById('musicHint').style.display = 'block';
-    });
-  }, 1000);
-});
-
-// При любом клике тоже пробуем включить музыку
-document.addEventListener('click', () => {
-  if (!musicStarted) {
-    startMusic();
-  }
-}, { once: true });
-
-// Загрузка фото
-const photo = document.getElementById('photo');
+// Попытка загрузить фото
+const photoContainer = document.getElementById('photoContainer');
 const img = new Image();
 img.onload = function() {
-  photo.innerHTML = '';
+  photoContainer.innerHTML = '';
   img.style.width = '100%';
   img.style.height = '100%';
   img.style.objectFit = 'cover';
-  photo.appendChild(img);
-};
-img.onerror = function() {
-  // Оставляем сердечко если фото не найдено
+  img.style.borderRadius = '50%';
+  photoContainer.appendChild(img);
 };
 img.src = './mama.jpg';
 
-// ОПТИМИЗИРОВАННЫЙ САЛЮТ
-const canvas = document.getElementById('magicCanvas');
-const ctx = canvas.getContext('2d');
-let fireworks = [];
-let particles = [];
-let toys = [];
+// Музыка
+const music = document.getElementById('backgroundMusic');
+music.volume = 0.3;
 
-function resizeCanvas() {
+// Множественные попытки запустить музыку
+function tryPlayMusic() {
+  const playPromise = music.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Пробуем еще раз через секунду
+      setTimeout(tryPlayMusic, 1000);
+    });
+  }
+}
+
+// Запускаем музыку при загрузке
+window.addEventListener('DOMContentLoaded', () => {
+  tryPlayMusic();
+});
+
+// И при любом клике
+document.addEventListener('click', () => {
+  if (music.paused) {
+    music.play();
+  }
+}, { once: true });
+
+// CANVAS ЭФФЕКТЫ
+const canvas = document.getElementById('effectsCanvas');
+const ctx = canvas.getContext('2d');
+
+// Установка размера canvas
+function setCanvasSize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+setCanvasSize();
+window.addEventListener('resize', setCanvasSize);
 
-// Класс для игрушек
-class Toy {
+// Массивы для эффектов
+let fireworks = [];
+let particles = [];
+let hearts = [];
+let flowers = [];
+
+// Ограничения для производительности
+const MAX_PARTICLES = 200;
+const MAX_HEARTS = 30;
+const MAX_FLOWERS = 15;
+
+// Класс для сердечек
+class Heart {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 15 + 10;
+    this.speedX = (Math.random() - 0.5) * 2;
+    this.speedY = -(Math.random() * 1.5 + 0.5);
+    this.opacity = 1;
+    this.color = `hsl(${Math.random() * 30 + 330}, 100%, 70%)`;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.speedY += 0.02;
+    this.opacity -= 0.008;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.font = `${this.size}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText('❤️', this.x, this.y);
+    ctx.restore();
+  }
+}
+
+// Класс для цветов
+class Flower {
   constructor(x, y) {
     this.x = x;
     this.y = y;
     this.size = Math.random() * 20 + 15;
-    this.velocity = {
-      x: (Math.random() - 0.5) * 3,
-      y: -(Math.random() * 2 + 1)
-    };
-    this.rotation = 0;
+    this.speedX = (Math.random() - 0.5) * 1.5;
+    this.speedY = -(Math.random() * 1 + 0.5);
+    this.rotation = Math.random() * Math.PI * 2;
     this.rotationSpeed = (Math.random() - 0.5) * 0.1;
     this.opacity = 1;
-    this.gravity = 0.08;
-    this.emoji = ['🧸', '🎀', '🎁', '💝', '🌺'][Math.floor(Math.random() * 5)];
+    this.emoji = ['🌸', '🌺', '🌷', '🌹', '🌼'][Math.floor(Math.random() * 5)];
   }
 
   update() {
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
-    this.velocity.y += this.gravity;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.speedY += 0.03;
     this.rotation += this.rotationSpeed;
-    this.opacity -= 0.015;
+    this.opacity -= 0.006;
   }
 
   draw() {
-    if (this.opacity <= 0) return;
-    
     ctx.save();
     ctx.globalAlpha = this.opacity;
     ctx.translate(this.x, this.y);
@@ -479,95 +496,103 @@ class Toy {
 
 // Класс для частиц
 class Particle {
-  constructor(x, y, color, velocity, size = 2, isHeart = false) {
+  constructor(x, y, color) {
     this.x = x;
     this.y = y;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = (Math.random() - 0.5) * 5;
+    this.speedY = (Math.random() - 0.5) * 5;
     this.color = color;
-    this.velocity = velocity;
-    this.size = size;
     this.opacity = 1;
-    this.decay = 0.02;
     this.gravity = 0.05;
-    this.isHeart = isHeart;
   }
 
   update() {
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
-    this.velocity.y += this.gravity;
-    this.velocity.x *= 0.98;
-    this.opacity -= this.decay;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.speedY += this.gravity;
+    this.speedX *= 0.98;
+    this.opacity -= 0.015;
   }
 
   draw() {
-    if (this.opacity <= 0) return;
-    
     ctx.save();
     ctx.globalAlpha = this.opacity;
-    
-    if (this.isHeart) {
-      ctx.font = `${this.size * 6}px Arial`;
-      ctx.fillText('❤️', this.x, this.y);
-    } else {
-      ctx.fillStyle = this.color;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
   }
 }
 
-// Класс для фейерверков
+// Класс для фейерверка
 class Firework {
-  constructor(sx, sy, tx, ty) {
-    this.x = sx;
-    this.y = sy;
-    this.sx = sx;
-    this.sy = sy;
-    this.tx = tx;
-    this.ty = ty;
-    this.distanceToTarget = Math.hypot(tx - sx, ty - sy);
-    this.distanceTraveled = 0;
-    this.trail = [];
-    this.trailLength = 10;
-    this.angle = Math.atan2(ty - sy, tx - sx);
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height;
+    this.targetX = Math.random() * canvas.width;
+    this.targetY = Math.random() * canvas.height * 0.4;
     this.speed = 2;
-    this.acceleration = 1.04;
-    this.color = `hsl(${Math.random() * 60 + 300}, 100%, 60%)`;
+    this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+    this.hue = Math.random() * 60 + 300;
+    this.trail = [];
   }
 
-  update(index) {
-    this.trail.push({ x: this.x, y: this.y });
-    if (this.trail.length > this.trailLength) {
+  update() {
+    this.trail.push({x: this.x, y: this.y});
+    if (this.trail.length > 8) {
       this.trail.shift();
     }
 
-    this.speed *= this.acceleration;
-    const vx = Math.cos(this.angle) * this.speed;
-    const vy = Math.sin(this.angle) * this.speed;
+    this.x += Math.cos(this.angle) * this.speed;
+    this.y += Math.sin(this.angle) * this.speed;
+    this.speed *= 1.03;
 
-    this.distanceTraveled = Math.hypot(this.x + vx - this.sx, this.y + vy - this.sy);
+    // Проверка достижения цели
+    const dist = Math.hypot(this.x - this.targetX, this.y - this.targetY);
+    if (dist < 10) {
+      this.explode();
+      return true;
+    }
+    return false;
+  }
 
-    if (this.distanceTraveled >= this.distanceToTarget) {
-      createExplosion(this.tx, this.ty);
-      fireworks.splice(index, 1);
-    } else {
-      this.x += vx;
-      this.y += vy;
+  explode() {
+    // Создаем частицы
+    const colors = ['#ff6ec7', '#ffb347', '#ff69b4', '#ffd700', '#ff1493'];
+    for (let i = 0; i < 30; i++) {
+      if (particles.length < MAX_PARTICLES) {
+        particles.push(new Particle(
+          this.x,
+          this.y,
+          colors[Math.floor(Math.random() * colors.length)]
+        ));
+      }
+    }
+
+    // Создаем сердечки
+    for (let i = 0; i < 3; i++) {
+      if (hearts.length < MAX_HEARTS) {
+        hearts.push(new Heart(this.x, this.y));
+      }
+    }
+
+    // Иногда создаем цветы
+    if (Math.random() > 0.5 && flowers.length < MAX_FLOWERS) {
+      flowers.push(new Flower(this.x, this.y));
     }
   }
 
   draw() {
-    // След
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 1;
+    // Рисуем след
+    ctx.strokeStyle = `hsl(${this.hue}, 100%, 60%)`;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     for (let i = 0; i < this.trail.length; i++) {
-      ctx.globalAlpha = i / this.trail.length * 0.5;
+      ctx.globalAlpha = i / this.trail.length;
       if (i === 0) {
         ctx.moveTo(this.trail[i].x, this.trail[i].y);
       } else {
@@ -576,124 +601,78 @@ class Firework {
     }
     ctx.stroke();
 
-    // Ракета
+    // Рисуем ракету
     ctx.globalAlpha = 1;
-    ctx.fillStyle = this.color;
+    ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
     ctx.beginPath();
     ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
     ctx.fill();
   }
 }
 
-function createExplosion(x, y) {
-  // Ограничиваем количество частиц
-  const particleCount = 40;
-  const colors = ['#ff69b4', '#ffd700', '#ff1493', '#ffb6c1'];
-  
-  // Обычные частицы
-  for (let i = 0; i < particleCount; i++) {
-    if (particles.length >= MAX_PARTICLES) break;
-    
-    const angle = (Math.PI * 2 / particleCount) * i;
-    const velocity = Math.random() * 3 + 2;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    
-    particles.push(new Particle(
-      x,
-      y,
-      color,
-      {
-        x: Math.cos(angle) * velocity,
-        y: Math.sin(angle) * velocity
-      },
-      Math.random() * 2 + 1
-    ));
-  }
-  
-  // Несколько сердечек
-  for (let i = 0; i < 5; i++) {
-    if (particles.length >= MAX_PARTICLES) break;
-    
-    const angle = Math.random() * Math.PI * 2;
-    const velocity = Math.random() * 2 + 1;
-    
-    particles.push(new Particle(
-      x,
-      y,
-      '#ff1493',
-      {
-        x: Math.cos(angle) * velocity,
-        y: Math.sin(angle) * velocity
-      },
-      2,
-      true
-    ));
-  }
-  
-  // Игрушки (немного)
-  if (toys.length < MAX_TOYS && Math.random() > 0.5) {
-    toys.push(new Toy(x, y));
-  }
-}
-
-// Автоматический запуск салютов
+// Запуск фейерверка
 function launchFirework() {
-  if (fireworks.length >= MAX_FIREWORKS) return;
-  
-  const startX = Math.random() * canvas.width;
-  const startY = canvas.height;
-  const endX = Math.random() * canvas.width;
-  const endY = Math.random() * canvas.height * 0.4 + 50;
-  
-  fireworks.push(new Firework(startX, startY, endX, endY));
+  if (fireworks.length < 3) {
+    fireworks.push(new Firework());
+  }
 }
 
-// Запускаем салюты реже для производительности
-setInterval(() => {
-  if (Math.random() > 0.3) {
-    launchFirework();
-  }
-}, 2000);
+// Автозапуск фейерверков
+setInterval(launchFirework, 1500);
 
-// Первый салют
-setTimeout(launchFirework, 500);
-
-// Оптимизированная анимация
+// Анимационный цикл
 function animate() {
-  // Полупрозрачная очистка для следов
-  ctx.fillStyle = 'rgba(10, 5, 20, 0.1)';
+  // Очистка с прозрачностью для следов
+  ctx.fillStyle = 'rgba(10, 0, 20, 0.1)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Фейерверки
+  // Обновляем и рисуем фейерверки
   for (let i = fireworks.length - 1; i >= 0; i--) {
     fireworks[i].draw();
-    fireworks[i].update(i);
+    if (fireworks[i].update()) {
+      fireworks.splice(i, 1);
+    }
   }
 
-  // Частицы
+  // Обновляем частицы
   for (let i = particles.length - 1; i >= 0; i--) {
-    particles[i].draw();
     particles[i].update();
-
+    particles[i].draw();
     if (particles[i].opacity <= 0) {
       particles.splice(i, 1);
     }
   }
 
-  // Игрушки
-  for (let i = toys.length - 1; i >= 0; i--) {
-    toys[i].draw();
-    toys[i].update();
+  // Обновляем сердечки
+  for (let i = hearts.length - 1; i >= 0; i--) {
+    hearts[i].update();
+    hearts[i].draw();
+    if (hearts[i].opacity <= 0) {
+      hearts.splice(i, 1);
+    }
+  }
 
-    if (toys[i].opacity <= 0 || toys[i].y > canvas.height) {
-      toys.splice(i, 1);
+  // Обновляем цветы
+  for (let i = flowers.length - 1; i >= 0; i--) {
+    flowers[i].update();
+    flowers[i].draw();
+    if (flowers[i].opacity <= 0) {
+      flowers.splice(i, 1);
     }
   }
 
   requestAnimationFrame(animate);
 }
 
+// Запускаем анимацию
 animate();
+
+// Первый залп
+setTimeout(() => {
+  for (let i = 0; i < 3; i++) {
+    setTimeout(launchFirework, i * 200);
+  }
+}, 500);
 </script>
 </body>
 </html>
